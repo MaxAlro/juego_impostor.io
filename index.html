@@ -300,6 +300,11 @@
       text-shadow: 0 0 22px rgba(255, 92, 122, 0.32);
     }
 
+    .secret-word.clue {
+      color: var(--accent);
+      font-size: clamp(2rem, 10vw, 3.35rem);
+    }
+
     .progress {
       display: flex;
       justify-content: center;
@@ -391,18 +396,18 @@
   <script>
     const PLAYERS = 5;
     const WORDS = [
-      "Illuminati",
-      "Reptiliano",
-      "Área 51",
-      "Control mental",
-      "Simulación",
-      "Señal",
-      "Experimento",
-      "Gobierno",
-      "Alienígena",
-      "Conspiración",
-      "Vigilancia",
-      "Mensaje oculto"
+      { crew: "Sociedad secreta", impostor: "Jerarquía" },
+      { crew: "Reptiliano", impostor: "Sustitución" },
+      { crew: "Área 51", impostor: "Acceso" },
+      { crew: "Control mental", impostor: "Exposición" },
+      { crew: "Simulación", impostor: "Error" },
+      { crew: "Señal", impostor: "Interferencia" },
+      { crew: "Experimento", impostor: "Falla" },
+      { crew: "Gobierno", impostor: "Propaganda" },
+      { crew: "Alienígena", impostor: "Origen" },
+      { crew: "Vigilancia", impostor: "Registro" },
+      { crew: "Conspiración", impostor: "Silencio" },
+      { crew: "Mensaje oculto", impostor: "Patrón" }
     ];
 
     const DEBATE_SECONDS = 120;
@@ -762,14 +767,15 @@
 
     function getSecretHtml() {
       const isImpostor = state.playerIndex === state.impostorIndex;
-      const text = isImpostor ? "IMPOSTOR" : escapeHtml(state.word);
+      const text = escapeHtml(isImpostor ? state.word.impostor : state.word.crew);
       const label = isImpostor ? "Tu rol" : "Palabra secreta";
       const className = isImpostor ? "secret-word impostor" : "secret-word";
 
       return `
         <div class="secret-inner">
           <p class="secret-label">${label}</p>
-          <p class="${className}">${text}</p>
+          ${isImpostor ? `<p class="${className}">IMPOSTOR</p><p class="secret-label">Tu palabra</p>` : ""}
+          <p class="secret-word${isImpostor ? " clue" : ""}">${text}</p>
         </div>
       `;
     }
